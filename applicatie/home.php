@@ -1,5 +1,5 @@
 <?php
-echo ('Hallo **je eigen naam**');
+;
 ?>
 
 <!DOCTYPE html>
@@ -15,9 +15,9 @@ echo ('Hallo **je eigen naam**');
         <h1>Checkin Gelre</h1>
         <nav>
             <ul>
-                <li><a href="Home.html">Startpagina</a></li>
-                <li><a href="new_flight.html">Nieuwe Vlucht</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="Home.php">Startpagina</a></li>
+                <li><a href="new_flight.php">Nieuwe Vlucht</a></li>
+                <li><a href="contact.php">Contact</a></li>
             </ul>
         </nav>
     </header>
@@ -29,7 +29,7 @@ echo ('Hallo **je eigen naam**');
 
     <section>
         <h2>Kies je rol:</h2>
-        <form action="passenger.html" method="get">
+        <form action="passenger.php" method="get">
             <label for="passenger">Passagier</label>
             <input type="radio" id="passenger" name="userType" value="passenger" required>
             <label for="passengerCode">Code:</label>
@@ -37,7 +37,7 @@ echo ('Hallo **je eigen naam**');
             <button type="submit">Ga naar je pagina</button>
         </form>
 
-        <form action="employee.html" method="get">
+        <form action="employee.php" method="get">
             <label for="employee">Medewerker</label>
             <input type="radio" id="employee" name="userType" value="employee" required>
             <label for="employeeCode">Code:</label>

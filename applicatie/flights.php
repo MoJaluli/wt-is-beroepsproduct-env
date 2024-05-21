@@ -1,6 +1,7 @@
 <?php
-echo ('Hallo **je eigen naam**');
+;
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,9 +17,9 @@ echo ('Hallo **je eigen naam**');
         <h1>Checkin Gelre</h1>
         <nav>
             <ul>
-                <li><a href="Home.html">Startpagina</a></li>
-                <li><a href="employee.html">Toevoegen</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="Home.php">Startpagina</a></li>
+                <li><a href="employee.php">Toevoegen</a></li>
+                <li><a href="contact.php">Contact</a></li>
             </ul>
         </nav>
     </header>

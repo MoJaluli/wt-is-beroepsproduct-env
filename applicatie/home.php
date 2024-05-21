@@ -1,3 +1,7 @@
+<?php
+echo ('Hallo **je eigen naam**');
+?>
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>

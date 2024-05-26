@@ -1,5 +1,24 @@
 <?php
-;
+require_once 'db_connectie.php';
+require_once 'sanitize.php';
+
+try {
+    $db = maakVerbinding();
+} catch (PDOException $e) {
+    die("Error connecting to database: " . $e->getMessage());
+}
+
+try {
+    $query = "SELECT vluchtnummer, bestemming, vertrektijd FROM Vlucht";
+    $data = $db->query($query);
+    $flight = $data->fetch(PDO::FETCH_ASSOC);
+    
+    $vluchtnummer = htmlspecialchars($flight['vluchtnummer']); 
+    $bestemming = htmlspecialchars($flight['bestemming']);
+    $vertrektijd = htmlspecialchars($flight['vertrektijd']);
+} catch (PDOException $e) {
+    die("Error executing query: " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -25,9 +44,9 @@
 
     <section id="flightDetails">
         <h2>Mijn Vluchtgegevens</h2>
-        <p>Vluchtnummer: <span id="passengerFlightNumber">123</span></p>
-        <p>Bestemming: <span id="passengerDestination">Amsterdam</span></p>
-        <p>Vertrektijd: <span id="passengerDepartureTime">2023-11-30 12:00:00</span></p>
+        <p>Vluchtnummer: <span id="passengerFlightNumber"><?php echo $vluchtnummer; ?></span></p>
+        <p>Bestemming: <span id="passengerDestination"><?php echo $bestemming; ?></span></p>
+        <p>Vertrektijd: <span id="passengerDepartureTime"><?php echo $vertrektijd; ?></span></p>
 
         <form action="inchecken.php" method="post">
             <label for="baggageWeight">Gewicht van koffer (kg):</label>

@@ -1,29 +1,57 @@
+<?php
+    require_once 'db_connectie.php';
+    session_start();
+    
+    ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
+    <title>Checkin Gelre - Home</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>It Works!</h1>
-    Hallo WT'er, de webserver is online en PHP werkt.
-    <br>
-    <br>
-    Alle technische informatie over je webserver vind je hier: <a href="phpinfo.php">http://<?=$_SERVER['HTTP_HOST']?>/phpinfo.php</a>
-    <br>
-    <br>
-    Een voorbeeld van een pagina die gegevens uit de database haalt vind je hier: <a href="componist-aantalstukken.php">http://<?=$_SERVER['HTTP_HOST']?>/componist-aantalstukken.php</a>
-    <br>
-    <br>
-    <?php
-    include 'contact.php';
-    include 'flights.php';
-    include 'employee.php';
-    include 'passenger.php';
-    include 'new_flights.php';
-    include 'home.php';
-    ?>
+    <header>
+        <h1>Checkin Gelre</h1>
+        <nav>
+            <ul>
+                <li><a href="Home.php">Startpagina</a></li>
+                <li><a href="new_flight.php">Nieuwe Vlucht</a></li>
+                <li><a href="contact.php">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Welkom bij Checkin Gelre</h2>
+        <p>Uw oplossing voor inchecken en vluchtinformatie op het vliegveld.</p>
+    </section>
+
+    <section>
+        <h2>Kies je rol:</h2>
+        <form action="passenger.php" method="get">
+            <label for="passenger">Passagier</label>
+            <input type="radio" id="passenger" name="userType" value="passenger" required>
+            <label for="passengerCode">Code:</label>
+            <input type="text" id="passengerCode" name="passengerCode" required>
+            <button type="submit">Ga naar je pagina</button>
+        </form>
+
+        <form action="employee.php" method="get">
+            <label for="employee">Medewerker</label>
+            <input type="radio" id="employee" name="userType" value="employee" required>
+            <label for="employeeCode">Code:</label>
+            <input type="text" id="employeeCode" name="employeeCode" required>
+            <button type="submit">Ga naar je pagina</button>
+        </form>
+    </section>
+
+    <img id="gelre-image" src="Tarjeta-de-embarque1.jpg" alt="Checkin Gelre Afbeelding">
+
+    <footer>
+        <p>&copy; 2023 Checkin Gelre. Alle rechten voorbehouden.</p>
+    </footer>
 </body>
 </html>

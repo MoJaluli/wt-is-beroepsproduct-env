@@ -1,4 +1,6 @@
 <?php
+require_once 'db_connectie.php';
+require_once 'sanitize.php'
 ;
 ?>
 

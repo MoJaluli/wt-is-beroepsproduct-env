@@ -10,6 +10,7 @@ try {
 }
 
 // Handle search functionality
+$searchTerm = ""; 
 $searchQuery = "";
 if (isset($_POST['search'])) {
     $searchTerm = sanitize($_POST['search']);
@@ -47,10 +48,11 @@ $vlucht_table .= '</table>';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkin Gelre - Vluchten</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
+   
 </head>
-
 <body>
+    
     <header>
         <h1>Checkin Gelre</h1>
         <nav>
@@ -69,17 +71,18 @@ $vlucht_table .= '</table>';
         <h2>Gegevenstabel</h2>
 
         <form id="searchForm" method="post">
-            <input type="text" id="searchInput" name="search" placeholder="Zoeken op naam">
+            <input type="text" id="searchInput" name="search" placeholder="Zoeken op naam" value="<?php echo htmlspecialchars($searchTerm); ?>">
             <button type="submit">Zoeken</button>
         </form>
 
-        <?php echo $vlucht_table; ?>
+        <div class="table-container">
+            <?php echo $vlucht_table; ?>
+        </div>
+
     </section>
 
     <footer>
         <p>&copy; 2023 Checkin Gelre. Alle rechten voorbehouden.</p>
     </footer>
 </body>
-
-
 </html>

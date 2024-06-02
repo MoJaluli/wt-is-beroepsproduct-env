@@ -134,7 +134,7 @@ button {
     color: #ecf0f1;
     padding: 16px 28px;
     border: none;
-    border-radius: 5px;
+    border-radius: 12px;
     cursor: pointer;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -162,4 +162,26 @@ input[type="email"]:focus,
 textarea:focus {
     border-color: #1f669c;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.table-container {
+    max-height: 400px; /* Pas de hoogte aan naar wens */
+    overflow-y: auto;
+    border: 1px solid #ccc; /* Optionele styling */
+}
+
+.vluchtentabel {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.vluchtentabel th, .vluchtentabel td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.vluchtentabel th {
+    background-color: #f2f2f2;
+    text-align: left;
 }

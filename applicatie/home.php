@@ -9,7 +9,7 @@ require_once 'sanitize.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkin Gelre - Home</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
@@ -47,7 +47,7 @@ require_once 'sanitize.php';
         </form>
     </section>
 
-    <img id="gelre-image" src="Tarjeta-de-embarque1.jpg" alt="Checkin Gelre Afbeelding">
+    <img id="gelre-image" src="images/Tarjeta-de-embarque1.jpg" alt="Checkin Gelre Afbeelding">
 
     <footer>
         <p>&copy; 2023 Checkin Gelre. Alle rechten voorbehouden.</p>

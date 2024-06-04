@@ -1,9 +1,4 @@
-<?php
-    require_once 'db_connectie.php';
-    session_start();
     
-    ?>
-
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -28,7 +23,7 @@
         <h2>Welkom bij Checkin Gelre</h2>
         <p>Uw oplossing voor inchecken en vluchtinformatie op het vliegveld.</p>
     </section>
-
+    
     <section>
         <h2>Kies je rol:</h2>
         <form action="passenger.php" method="get">

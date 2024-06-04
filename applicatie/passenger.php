@@ -2,24 +2,36 @@
 require_once 'db_connectie.php';
 require_once 'sanitize.php';
 
-try {
-    $db = maakVerbinding();
-} catch (PDOException $e) {
-    die("Error connecting to database: " . $e->getMessage());
-}
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['wachtwoord'])) {
+    $passengerCode = sanitize($_GET['wachtwoord']);
 
-try {
-    $query = "SELECT vluchtnummer, bestemming, vertrektijd FROM Vlucht";
-    $data = $db->query($query);
-    $flight = $data->fetch(PDO::FETCH_ASSOC);
-    
-    $vluchtnummer = htmlspecialchars($flight['vluchtnummer']); 
-    $bestemming = htmlspecialchars($flight['bestemming']);
-    $vertrektijd = htmlspecialchars($flight['vertrektijd']);
-} catch (PDOException $e) {
-    die("Error executing query: " . $e->getMessage());
+    $conn = maakVerbinding();
+
+    $sql = "SELECT passagiernummer, naam, vluchtnummer, wachtwoord FROM [GelreAirport].[dbo].[Passagier] WHERE wachtwoord = :wachtwoord";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':wachtwoord', $passengerCode, PDO::PARAM_STR);
+    $stmt->execute(); // Execute the query
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($result) {
+        if (password_verify($passengerCode, $result['wachtwoord'])) {
+            // Redirect to passenger portal
+            header("Location: passenger_portal.php?code=" . urlencode($passengerCode));
+            exit();
+        } else {
+            $error = "Invalid passenger code.";
+            header("Location: home.php?error=" . urlencode($error));
+            exit();
+        }
+    } else {
+        $error = "Invalid passenger code.";
+        header("Location: home.php?error=" . urlencode($error));
+        exit();
+    }
 }
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">

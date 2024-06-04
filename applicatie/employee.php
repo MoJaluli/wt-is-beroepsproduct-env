@@ -1,6 +1,35 @@
 <?php
 require_once 'db_connectie.php';
 require_once 'sanitize.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['wachtwoord'])) {
+    $employeeCode = sanitize($_GET['wachtwoord']);
+
+    $conn = maakVerbinding();
+
+    $sql = "SELECT balienummer, wachtwoord FROM [GelreAirport].[dbo].[Balie] WHERE wachtwoord = :wachtwoord";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':wachtwoord', $employeeCode, PDO::PARAM_STR);
+    $stmt->execute(); // Add this line to execute the query
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($result) {
+        if (password_verify($employeeCode, $result['wachtwoord'])) {
+            header("Location: home.php?code=" . urlencode($employeeCode));
+            exit();
+        } else {
+            $error = "Invalid employee code.";
+            header("Location: home.php?error=" . urlencode($error));
+            exit();
+        }
+    } else {
+        $error = "Invalid employee code.";
+        header("Location: home.php?error=" . urlencode($error));
+        exit();
+    }
+}
+?>
+
 ;
 ?>
 

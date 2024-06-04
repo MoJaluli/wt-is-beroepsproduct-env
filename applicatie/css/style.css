@@ -185,3 +185,23 @@ textarea:focus {
     background-color: #f2f2f2;
     text-align: left;
 }
+.login-sections {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+.login-section {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    width: 45%;
+}
+.login-section form {
+    display: flex;
+    flex-direction: column;
+}
+.login-section label,
+.login-section input,
+.login-section button {
+    margin-bottom: 10px;
+}

@@ -1,6 +1,7 @@
 <?php
 require_once 'sanitize.php';
-;
+require_once 'db_connectie.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -27,27 +28,36 @@ require_once 'sanitize.php';
         <h2>Welkom bij Checkin Gelre</h2>
         <p>Uw oplossing voor inchecken en vluchtinformatie op het vliegveld.</p>
     </section>
-
-    <section>
-        <h2>Kies je rol:</h2>
-        <form action="passenger.php" method="get">
-            <label for="passenger">Passagier</label>
-            <input type="radio" id="passenger" name="userType" value="passenger" required>
-            <label for="passengerCode">Code:</label>
-            <input type="text" id="passengerCode" name="passengerCode" required>
-            <button type="submit">Ga naar je pagina</button>
-        </form>
-
-        <form action="employee.php" method="get">
-            <label for="employee">Medewerker</label>
-            <input type="radio" id="employee" name="userType" value="employee" required>
-            <label for="employeeCode">Code:</label>
-            <input type="text" id="employeeCode" name="employeeCode" required>
-            <button type="submit">Ga naar je pagina</button>
-        </form>
-    </section>
-
-    <img id="gelre-image" src="images/Tarjeta-de-embarque1.jpg" alt="Checkin Gelre Afbeelding">
+    
+    <div class="login-sections">
+        <section class="login-section">
+            <h2>Passagier Inloggen</h2>
+            <?php if (isset($error)) { ?>
+                <p class="error"><?= htmlspecialchars($error) ?></p>
+            <?php } ?>
+            <form action="passenger.php" method="get">
+                <label for="passagier">Passagier</label>
+                <input type="text" id="passagier" name="passagier" required>
+                <label for="wachtwoord">Wachtwoord:</label>
+                <input type="text" id="wachtwoord" name="wachtwoord" required>
+                <button type="submit">Inloggen</button>
+            </form>
+        </section>
+        
+        <section class="login-section">
+            <h2>Medewerker Inloggen</h2>
+            <?php if (isset($error)) { ?>
+                <p class="error"><?= htmlspecialchars($error) ?></p>
+            <?php } ?>
+            <form action="employee.php" method="get">
+                <label for="ballienummer">Ballienummer:</label>
+                <input type="text" id="ballienummer" name="ballienummer" required>
+                <label for="wachtwoord">Wachtwoord:</label>
+                <input type="text" id="wachtwoord" name="wachtwoord" required>
+                <button type="submit">Inloggen</button>
+            </form>
+        </section>
+    </div>
 
     <footer>
         <p>&copy; 2023 Checkin Gelre. Alle rechten voorbehouden.</p>

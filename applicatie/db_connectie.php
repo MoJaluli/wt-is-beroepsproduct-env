@@ -19,6 +19,7 @@ $verbinding->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Functie om in andere files toegang te krijgen tot de verbinding.
 function maakVerbinding() {
+
   global $verbinding;
   return $verbinding;
 }

@@ -1,5 +1,5 @@
 <?php
-require_once 'db_connectie.php';
+require_once '../db_connectie.php';
 require_once 'sanitize.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['wachtwoord'])) {

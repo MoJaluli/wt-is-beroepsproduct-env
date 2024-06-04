@@ -1,6 +1,6 @@
 <?php
 require_once 'sanitize.php';
-require_once 'db_connectie.php';
+
 
 ?>
 
@@ -35,6 +35,7 @@ require_once 'db_connectie.php';
             <?php if (isset($error)) { ?>
                 <p class="error"><?= htmlspecialchars($error) ?></p>
             <?php } ?>
+            <form class="text-center" method="post" action="helpers/login.php">
             <form action="passenger.php" method="get">
                 <label for="passagier">Passagier</label>
                 <input type="text" id="passagier" name="passagier" required>
@@ -49,6 +50,7 @@ require_once 'db_connectie.php';
             <?php if (isset($error)) { ?>
                 <p class="error"><?= htmlspecialchars($error) ?></p>
             <?php } ?>
+            <form class="text-center" method="post" action="helpers/login.php">
             <form action="employee.php" method="get">
                 <label for="ballienummer">Ballienummer:</label>
                 <input type="text" id="ballienummer" name="ballienummer" required>
@@ -60,7 +62,9 @@ require_once 'db_connectie.php';
     </div>
 
     <footer>
-        <p>&copy; 2023 Checkin Gelre. Alle rechten voorbehouden.</p>
+        <?php
+        require_once 'footer.php';
+        ?>
     </footer>
 </body>
 </html>

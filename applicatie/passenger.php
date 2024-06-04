@@ -2,7 +2,7 @@
 require_once 'db_connectie.php';
 require_once 'sanitize.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['wachtwoord'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_GET['wachtwoord'])) {
     $passengerCode = sanitize($_GET['wachtwoord']);
 
     $conn = maakVerbinding();

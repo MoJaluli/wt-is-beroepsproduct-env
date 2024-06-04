@@ -13,8 +13,8 @@ if (isset($_POST['vluchtnummer'])) {
 
   // Controleer of het vluchtnummer 5 cijfers heeft, zoniet stuur dan door naar index.php
   if (strlen((string)$vluchtnummeringevuld) !== 5) {
-      header("Location: index.php?error2=IncorrectFlightdetails");
-      exit();
+    header("Location: index.php?error2=IncorrectFlightdetails");
+    exit();
   }
   $sqlquery = "SELECT * FROM Vlucht WHERE vluchtnummer = :vluchtnummer";
   $verbinding = maakVerbinding();
@@ -30,7 +30,7 @@ if (isset($_POST['vluchtnummer'])) {
   // dit zet aantalrijen op 1 als er resultaten zijn, als dat niet zo is dan komt het op 0 te staan
   $aantalRijen = ($row) ? 1 : 0;
   if ($aantalRijen === 1) {
-    
+
     session_start();
     $_SESSION['ingelogd'] = true;
   } else {
@@ -143,37 +143,37 @@ if (!empty($_POST['passagiernummer'])) {
 //KOFFERTABEL
 //Hier worden ingechkte koffers laten zien
 if (isset($_POST['passagiernummerkoffercheck']) != NULL) {
-$passagiernummerkoffercheck = sanitize($_POST['passagiernummerkoffercheck']);
+  $passagiernummerkoffercheck = sanitize($_POST['passagiernummerkoffercheck']);
 
-$sqlquery3 = "SELECT objectvolgnummer, gewicht FROM BagageObject WHERE passagiernummer = :passagiernummer";
-$verbinding = maakVerbinding();
-$query_koffer = $verbinding->prepare($sqlquery3);
-$query_koffer->bindParam(':passagiernummer', $passagiernummerkoffercheck, PDO::PARAM_INT);
-$query_koffer->execute();
-if (isset($_POST['passagiernummerkoffercheck']) && $_POST['passagiernummerkoffercheck'] !== "") {
-$koffer_tabel = '<table id="koffertabel" class="koffertabel">';
-$koffer_tabel .= '<thead>
+  $sqlquery3 = "SELECT objectvolgnummer, gewicht FROM BagageObject WHERE passagiernummer = :passagiernummer";
+  $verbinding = maakVerbinding();
+  $query_koffer = $verbinding->prepare($sqlquery3);
+  $query_koffer->bindParam(':passagiernummer', $passagiernummerkoffercheck, PDO::PARAM_INT);
+  $query_koffer->execute();
+  if (isset($_POST['passagiernummerkoffercheck']) && $_POST['passagiernummerkoffercheck'] !== "") {
+    $koffer_tabel = '<table id="koffertabel" class="koffertabel">';
+    $koffer_tabel .= '<thead>
                   <tr>
                     <th>KofferID</th>
                     <th>Gewicht in KG</th>
                     
                   </tr>
                 </thead>';
-$koffer_tabel .= '<tbody>';
+    $koffer_tabel .= '<tbody>';
 
-foreach ($query_koffer as $rij) {
-    $koffer_tabel .= '<tr>';
-    $koffer_tabel .= '<td>' . $rij['objectvolgnummer'] . '</td>';
-    $koffer_tabel .= '<td>' . $rij['gewicht'] . '</td>';
-    $koffer_tabel .= '</tr>';
-} 
+    foreach ($query_koffer as $rij) {
+      $koffer_tabel .= '<tr>';
+      $koffer_tabel .= '<td>' . $rij['objectvolgnummer'] . '</td>';
+      $koffer_tabel .= '<td>' . $rij['gewicht'] . '</td>';
+      $koffer_tabel .= '</tr>';
+    }
 
-$koffer_tabel .= '</tbody>';
-$koffer_tabel .= '</table>';
-} else {
-  // Geen resultaten gevonden, wijzig de header
-  $koffer_tabel = '<p>Geen koffers gevonden voor het opgegeven passagiernummer.</p>';
-}
+    $koffer_tabel .= '</tbody>';
+    $koffer_tabel .= '</table>';
+  } else {
+    // Geen resultaten gevonden, wijzig de header
+    $koffer_tabel = '<p>Geen koffers gevonden voor het opgegeven passagiernummer.</p>';
+  }
 }
 ?>
 
@@ -233,8 +233,8 @@ $koffer_tabel .= '</table>';
           <form action="boekingsscherm.php" method="post">
 
             <?php if (isset($error3)) { ?>
-                        <p class="error3"><?=$error3 ?></p>
-                    <?php } ?>
+              <p class="error3"><?= $error3 ?></p>
+            <?php } ?>
 
             <label for="passagiernummer">Passagiernummer:</label>
             <input type="passagiernummer" id="passagiernummer" name="passagiernummer" required />
@@ -248,20 +248,21 @@ $koffer_tabel .= '</table>';
       </div>
     </div>
     <div class="groottecontainer2">
-    <div class="container2">
-    <div class="vluchtentabel">
-        <h2>Ingecheckte koffers</h2>
-        <form action="boekingsscherm.php" method="post">
-        <label for="passagiernummerkoffercheck">Passagiernummer:</label>
+      <div class="container2">
+        <div class="vluchtentabel">
+          <h2>Ingecheckte koffers</h2>
+          <form action="boekingsscherm.php" method="post">
+            <label for="passagiernummerkoffercheck">Passagiernummer:</label>
             <input type="number" id="passagiernummerkoffercheck" name="passagiernummerkoffercheck" required />
             <button type="submit">Inchecken</button>
-          <?php 
-          if(isset($koffer_tabel)){
-          echo $koffer_tabel;} ?>
-            </form>
+            <?php
+            if (isset($koffer_tabel)) {
+              echo $koffer_tabel;
+            } ?>
+          </form>
+        </div>
       </div>
-          </div>
-          </div>
+    </div>
     <div class="groottecontainer3">
 
 

@@ -8,7 +8,7 @@
                 <h3>Gelre Airport</h3>
                 <p>Adres: Luchthavenstraat 1, 1234 AB, Apeldoorn</p>
                 <p>Telefoon: 055-1234567</p>
-                <p>Email:
+                <p>Email: GelreAirport@gmail.com
                     <a href="mailto:
         </div>
     </div>

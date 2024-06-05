@@ -75,7 +75,7 @@ if (isset($_POST['login'])) {
             <ul>
                 <li><a href="home.php">Startpagina</a></li>
                 <li><a href="new_flight.php">Nieuwe Vlucht</a></li>
-                <li><a href="contact.php">Contact</a></li>
+                <li><a href="newpassenger.php">Nieuwe passagier</a></li>
             </ul>
         </nav>
     </header>
@@ -104,7 +104,7 @@ if (isset($_POST['login'])) {
             <?php if (isset($error)) { ?>
                 <p class="error"><?= htmlspecialchars($error) ?></p>
             <?php } ?>
-            <form class="text-center" method="POST" action="helpers/login.php">
+            <form class="text-center" method="POST" action="employee.php">
                 <label for="ballienummer">Ballienummer:</label>
                 <input type="text" id="ballienummer" name="ballienummer" placeholder="Ballienummer" required>
                 <label for="wachtwoord">Wachtwoord:</label>
@@ -113,7 +113,6 @@ if (isset($_POST['login'])) {
             </form>
         </section>
     </div>
-
     <footer>
         <?php
      require_once 'footer.php';

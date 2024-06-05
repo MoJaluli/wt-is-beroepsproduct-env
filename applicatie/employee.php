@@ -155,7 +155,7 @@ VALUES (:var_passagiernummer,(Select MAX(objectvolgnummer) from Bagageobject WHE
             <ul>
                 <li><a href="home.php">Startpagina</a></li>
                 <li><a href="new_flight.php">Nieuwe Vlucht</a></li>
-                <li><a href="contact.php">Contact</a></li>
+                <li><a href="newpassenger.php">Nieuwe passagier</a></li>
             </ul>
         </nav>
     </header>

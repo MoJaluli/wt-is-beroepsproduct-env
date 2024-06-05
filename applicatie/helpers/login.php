@@ -1,85 +1,95 @@
 <?php
-session_start();
-require_once 'sanitize.php';
 require_once '../db_connectie.php';
+$melding = '';
 
-// Check if the user is already logged in
-if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn']) {
-    $_SESSION['error']['global'] = 'U bent al ingelogd.';
-    header('Location: index.php');
-    exit();
-}
+if (isset($_POST['login'])) {
+    $gebruikersnaam = htmlspecialchars(trim($_POST['gebruikersnaam']));
+    $wachtwoord = htmlspecialchars(trim($_POST['wachtwoord']));
+    try {
+        $db = maakVerbinding();
 
-// Initialize the session error array
-$_SESSION['error'] = [];
+        $sql = "SELECT wachtwoordhash
+        FROM Gebruiker
+        WHERE gebruikersnaam = :var_gebruikersnaam";
+        
+        $query = $db->prepare($sql);
 
-// Process passenger login
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['passagier'])) {
-    $passagier = sanitize($_POST['passagier']);
-    $wachtwoord = sanitize($_POST['wachtwoord']);
+        $data = [
+            'var_gebruikersnaam' => $gebruikersnaam,
+          ];
+    
+        $query->execute($data);
 
-    if (empty($passagier) || empty($wachtwoord)) {
-        $_SESSION['error']['login'] = "Vul alstublieft uw gebruikersnaam en wachtwoord in.";
-    } else {
-        try {
-            $conn = maakVerbinding();
-            $sql = "SELECT passagiernummer, wachtwoord FROM Passagier WHERE passagiernummer = :passagiernummer";
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':passagiernummer', $passagier, PDO::PARAM_STR);
-            $stmt->execute();
-            $passenger = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($passenger && password_verify($wachtwoord, $passenger['wachtwoord'])) {
-                // Set session variables and redirect to passenger portal
-                $_SESSION['loggedIn'] = true;
-                $_SESSION['username'] = $passagier;
-                header("Location: passenger.php");
-                exit();
+        if ($rij = $query->fetch()) {
+            //gebruiker gevonden
+            $passwordhash = $rij['wachtwoordhash'];
+            if (password_verify($wachtwoord, $passwordhash)) {
+                session_start();
+                // header('location: index.php');
+                $_SESSION['gebruiker'] = $gebruikersnaam;
+                header("Location: ./index.php");
             } else {
-                $_SESSION['error']['login'] = "Ongeldige inloggegevens voor passagier.";
+                $melding = "<p class='error-msg'>fout: incorrecte inloggegevens!</p>";
             }
-        } catch (PDOException $e) {
-           
-            $_SESSION['error']['login'] = "Er is een fout opgetreden. Probeer het later opnieuw.";
+        } else {
+            $melding = "<p class='error-msg'>fout: incorrecte inloggegevens!</p>";
         }
-    }
+        
 
-    header('Location: 404.php'); // Redirect to error page if login fails
-    exit();
-}
 
-// Process employee login
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['balienummer'])) {
-    $balienummer = sanitize($_POST['balienummer']);
-    $wachtwoord = sanitize($_POST['wachtwoord']);
-
-    if (empty($balienummer) || empty($wachtwoord)) {
-        $_SESSION['error']['login'] = "Vul alstublieft uw gebruikersnaam en wachtwoord in.";
-    } else {
-        try {
-            $conn = maakVerbinding();
-            $sql = "SELECT balienummer, wachtwoord FROM Balie WHERE balienummer = :balienummer";
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':balienummer', $balienummer, PDO::PARAM_STR);
-            $stmt->execute();
-            $employee = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($employee && password_verify($wachtwoord, $employee['wachtwoord'])) {
-                // Set session variables and redirect to employee portal
-                $_SESSION['loggedIn'] = true;
-                $_SESSION['username'] = $balienummer;
-                header("Location: employee.php");
-                exit();
-            } else {
-                $_SESSION['error']['login'] = "Ongeldige inloggegevens voor medewerker.";
-            }
-        } catch (PDOException $e) {
-            logError("Database error: " . $e->getMessage());
-            $_SESSION['error']['login'] = "Er is een fout opgetreden. Probeer het later opnieuw.";
-        }
-    }
-
-    header('Location: 404.php'); // Redirect to error page if login fails
-    exit();
+    }catch(PDOException $e) {
+        $melding = "<p class='error-msg'>Er is iets misgegaan. Neem contact op met de systeembeheerder.</p>" . $e->getMessage();
+      }
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <title>Gelre airport</title>
+</head>
+
+<body>
+    <header>
+        <input type="checkbox" id="menu-toggle" />
+        <label for="menu-toggle"></label>
+        <nav>
+            <ul>
+              <li><a href="./index.php">Home</a></li>
+              <li><a href="./Kofferinchecken.php">Koffer inchecken</a></li>
+              <li><a href="./Login.php">Log in voor medewerkers</a></li>
+            </ul>
+          </nav>
+        <a>Log in</a>
+    </header>
+
+    <main>
+    <?php if (isset($error)) { ?>
+                <p class="error"><?= htmlspecialchars($error) ?></p>
+            <?php } ?>
+            <main>
+    <?php echo $melding ?>
+        <form action="./login.php" method="post">
+
+            <label for="gebruikersnaam">Gebruikersnaam: </label>
+            <input type="text" name="gebruikersnaam" id="gebruikersnaam" placeholder="Gebruikersnaam">
+
+            <label for="wachtwoord">Wachtwoord: </label>
+            <input type="password" name="wachtwoord" id="wachtwoord" placeholder="Wachtwoord">
+
+            <input type="submit" name="login" value="Log in">
+
+        </form>
+        <a href="./registreren.php">registreren</a>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Gelre Airport. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

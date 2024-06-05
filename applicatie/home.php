@@ -38,8 +38,7 @@ function logError($message) {
             <ul>
                 <li><a href="home.php">Startpagina</a></li>
                 <li><a href="new_flight.php">Nieuwe Vlucht</a></li>
-                <li><a href="contact.php">Contact</a></li>
-            </ul>
+                <li><a href="contact.php">Contact</a></li>            </ul>
         </nav>
     </header>
 

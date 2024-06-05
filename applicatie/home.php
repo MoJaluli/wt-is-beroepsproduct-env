@@ -2,7 +2,6 @@
 require_once 'sanitize.php';
 require_once 'db_connectie.php';
 
-
 session_start();
 
 // Initialize the session error array
@@ -18,9 +17,47 @@ function logError($message) {
 
     header('Location: 404.php');
     exit();
-    
 }
 
+// Meldingen voor login
+$melding = '';
+
+// Login-functionaliteit
+if (isset($_POST['login'])) {
+    $gebruikersnaam = htmlspecialchars(trim($_POST['gebruikersnaam']));
+    $wachtwoord = htmlspecialchars(trim($_POST['wachtwoord']));
+    try {
+        $db = maakVerbinding();
+
+        $sql = "SELECT wachtwoordhash
+        FROM Gebruiker
+        WHERE gebruikersnaam = :var_gebruikersnaam";
+
+        $query = $db->prepare($sql);
+
+        $data = [
+            'var_gebruikersnaam' => $gebruikersnaam,
+        ];
+
+        $query->execute($data);
+
+        if ($rij = $query->fetch()) {
+            // gebruiker gevonden
+            $passwordhash = $rij['wachtwoordhash'];
+            if (password_verify($wachtwoord, $passwordhash)) {
+                $_SESSION['gebruiker'] = $gebruikersnaam;
+                header("Location: passenger.php");
+                exit();
+            } else {
+                $melding = "<p class='error-msg'>Fout: incorrecte inloggegevens!</p>";
+            }
+        } else {
+            $melding = "<p class='error-msg'>Fout: incorrecte inloggegevens!</p>";
+        }
+    } catch (PDOException $e) {
+        $melding = "<p class='error-msg'>Er is iets misgegaan. Neem contact op met de systeembeheerder.</p>" . $e->getMessage();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -51,32 +88,27 @@ function logError($message) {
     <div class="login-sections">
         <section class="login-section">
             <h2>Passagier Inloggen</h2>
-            <?php if (isset($error)) { ?>
-                <p class="error"><?= htmlspecialchars($error) ?></p>
-            <?php } ?>
-            <form class="text-center" method="POST" action="helpers/login.php">
-            <form action="passenger.php" method="get">
-                <label for="passagier">Passagier</label>
-                <input type="text" id="passagier" name="passagier" placeholder="gebruikersnaam"required>
+            <?php if (isset($melding)) { echo $melding; } ?>
+            <form class="text-center" method="POST" action="">
+                <label for="gebruikersnaam">Gebruikersnaam:</label>
+                <input type="text" id="gebruikersnaam" name="gebruikersnaam" placeholder="Gebruikersnaam" required>
                 <label for="wachtwoord">Wachtwoord:</label>
-                <input type="text" id="wachtwoord" name="wachtwoord" placeholder="wachtwoord" required>
-                <button type="submit">Inloggen</button>
+                <input type="password" id="wachtwoord" name="wachtwoord" placeholder="Wachtwoord" required>
+                <button type="submit" name="login">Inloggen</button>
             </form>
-            <a href="../registreren.php">registreren</a>
-            
+            <a href="registreren.php">registreren</a>
         </section>
-        
+
         <section class="login-section">
             <h2>Medewerker Inloggen</h2>
             <?php if (isset($error)) { ?>
                 <p class="error"><?= htmlspecialchars($error) ?></p>
             <?php } ?>
             <form class="text-center" method="POST" action="helpers/login.php">
-            <form action="employee.php" method="get">
                 <label for="ballienummer">Ballienummer:</label>
-                <input type="text" id="ballienummer" name="ballienummer" placeholder="ballienummer" required>
+                <input type="text" id="ballienummer" name="ballienummer" placeholder="Ballienummer" required>
                 <label for="wachtwoord">Wachtwoord:</label>
-                <input type="text" id="wachtwoord" name="wachtwoord" placeholder="wachtwoord" required>
+                <input type="password" id="wachtwoord" name="wachtwoord" placeholder="Wachtwoord" required>
                 <button type="submit">Inloggen</button>
             </form>
         </section>
@@ -84,7 +116,7 @@ function logError($message) {
 
     <footer>
         <?php
-        require_once 'footer.php';
+     require_once 'footer.php';
         ?>
     </footer>
 </body>

@@ -27,7 +27,7 @@ if (isset($_POST['login'])) {
                 session_start();
                 // header('location: index.php');
                 $_SESSION['gebruiker'] = $gebruikersnaam;
-                header("Location: ./index.php");
+                header("Location: ../index.php");
             } else {
                 $melding = "<p class='error-msg'>fout: incorrecte inloggegevens!</p>";
             }
@@ -47,24 +47,22 @@ if (isset($_POST['login'])) {
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.re.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="UTF-8" />
     <title>Gelre airport</title>
 </head>
 
 <body>
-    <header>
-        <input type="checkbox" id="menu-toggle" />
-        <label for="menu-toggle"></label>
+<header>
+        <h1>Checkin Gelre</h1>
         <nav>
             <ul>
-              <li><a href="./index.php">Home</a></li>
-              <li><a href="./Kofferinchecken.php">Koffer inchecken</a></li>
-              <li><a href="./Login.php">Log in voor medewerkers</a></li>
+                <li><a href="../home.php">Startpagina</a></li>
+                <li><a href="../new_flight.php">Nieuwe Vlucht</a></li>
+                <li><a href="../contact.php">Contact</a></li>
             </ul>
-          </nav>
-        <a>Log in</a>
+        </nav>
     </header>
 
     <main>
@@ -84,11 +82,13 @@ if (isset($_POST['login'])) {
             <input type="submit" name="login" value="Log in">
 
         </form>
-        <a href="./registreren.php">registreren</a>
+        <a href="../registreren.php">registreren</a>
     </main>
 
     <footer>
-        <p>&copy; 2023 Gelre Airport. All rights reserved.</p>
+        <?php
+        require_once 'footer.php';
+        ?>
     </footer>
 </body>
 

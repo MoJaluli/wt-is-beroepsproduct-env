@@ -1,146 +1,181 @@
 <?php
-require_once '../db_connectie.php';
-require_once 'sanitize.php';
+require_once 'db_connectie.php';
 
-// als de medewerker is ingelogd dan komt de pagina tevoorschijn
-session_start();
-if (!isset($_SESSION['ingelogd']) || $_SESSION['ingelogd'] !== true) {
-  header("Location: employee.php");
-  exit();
+
+function CheckIfToMuchWeight($passagiernummer, $gewicht) {
+  $db = maakVerbinding();
+
+  $sqlMaxGewicht = "select v.max_gewicht_pp
+  from Passagier p 
+  JOIN Vlucht v ON p.vluchtnummer = v.vluchtnummer
+  LEFT JOIN Bagageobject b ON p.passagiernummer = b.passagiernummer
+  WHERE p.passagiernummer = :var_passagiernummer1
+   GROUP BY p.passagiernummer, p.naam, v.vluchtnummer, v.max_gewicht_pp";
+
+  $sqlCheckAlIngecheckteGewicht = "select v.max_gewicht_pp, sum(b.gewicht) as gewicht_bagage 
+  from Passagier p 
+  JOIN Vlucht v ON p.vluchtnummer = v.vluchtnummer
+  LEFT JOIN Bagageobject b ON p.passagiernummer = b.passagiernummer
+  WHERE p.passagiernummer = :var_passagiernummer
+   GROUP BY p.passagiernummer, p.naam, v.vluchtnummer, v.max_gewicht_pp
+                HAVING COALESCE(SUM(b.gewicht), 0) <= v.max_gewicht_pp";
+                
+$data_sqlCheckAlIngecheckteGewicht = [
+  'var_passagiernummer' => $passagiernummer,
+  
+];
+$data_sqlMaxGewicht = [
+  'var_passagiernummer1' => $passagiernummer,
+];
+$queryMaxGewicht = $db->prepare($sqlMaxGewicht);
+$queryMaxGewicht->execute($data_sqlMaxGewicht);
+
+$queryCheckAlIngecheckteGewicht = $db->prepare($sqlCheckAlIngecheckteGewicht);
+$queryCheckAlIngecheckteGewicht->execute($data_sqlCheckAlIngecheckteGewicht);
+
+$result = $queryMaxGewicht->fetchAll(PDO::FETCH_ASSOC);
+if ($queryCheckAlIngecheckteGewicht->rowCount() == 0) {
+  if($gewicht > $result[0]['max_gewicht_pp'])
+  return true;
+}
+
+$resultCheck = $queryCheckAlIngecheckteGewicht->fetchAll(PDO::FETCH_ASSOC);
+if($gewicht+$resultCheck[0]['gewicht_bagage']> $result[0]['max_gewicht_pp']){
+  return true;
+}
+return false;
+}
+function CheckIfToMuchBagages($passagiernummer, $aantal)
+{
+  $db = maakVerbinding();
+  // Voorbereiden insert into statement
+
+
+  $sql = "select MAX(objectvolgnummer) AS nummer from Bagageobject WHERE passagiernummer = :var_passagiernummer";
+
+  $query = $db->prepare($sql);
+
+  // Data voorbereiden
+
+  $data = [
+    'var_passagiernummer' => $passagiernummer,
+  ];
+
+  $query->execute($data);
+
+  if ($query->rowCount() == 0) {
+    return false;
+  }
+  $result = $query->fetchAll(PDO::FETCH_ASSOC);
+  return $result[0]['nummer'] >= $aantal ? true : false;
 }
 
 
-;
-?>
+function CheckIfPassengernumberExists($passagiernummer)
+{
+  $db = maakVerbinding();
+  // Voorbereiden insert into statement
 
+
+  $sql = "select passagiernummer from Bagageobject WHERE passagiernummer = :var_passagiernummer";
+
+  $query = $db->prepare($sql);
+
+  // Data voorbereiden
+
+  $data = [
+    'var_passagiernummer' => $passagiernummer,
+  ];
+
+  $query->execute($data);
+
+  if ($query->rowCount() == 0) {
+    return false;
+  }else{
+    return true;
+  }
+  
+}
+
+if (isset($_POST['opslaan'])) {
+  $passagiernummer = intval(htmlspecialchars(trim($_POST['Passagiernummer'])));
+  $gewicht = intval(htmlspecialchars(trim($_POST['gewicht'])));
+
+  // Er zijn geen fouten, door naar sql insert into...
+  //try {
+    $db = maakVerbinding();
+    // Voorbereiden insert into statement
+    if (!CheckIfToMuchBagages($passagiernummer, 9) && CheckIfPassengernumberExists($passagiernummer) && !CheckIfToMuchWeight($passagiernummer, $gewicht)) {
+      
+
+      $sql = "INSERT INTO Bagageobject (passagiernummer, objectvolgnummer, gewicht)
+VALUES (:var_passagiernummer,(Select MAX(objectvolgnummer) from Bagageobject WHERE passagiernummer = :var_passagiernummer2)  +1 ,:var_gewicht)";
+
+      $query = $db->prepare($sql);
+
+      // Data voorbereiden
+
+      $data = [
+        'var_passagiernummer' => $passagiernummer,
+        'var_gewicht' => $gewicht,
+        'var_passagiernummer2' => $passagiernummer,
+      ];
+
+      $query->execute($data);
+      if ($query) {
+        $melding = "<p class='success-msg'>U heeft een koffer ingecheckt.</p>";
+      }
+    } elseif(CheckIfToMuchBagages($passagiernummer, 9)) {
+      $melding = "<p class='error-msg'>Je hebt al 9 of meer koffers ingecheckt.</p>";
+    }elseif(!CheckIfPassengernumberExists($passagiernummer)) {
+      $melding = "<p class='error-msg'>Het ingevoerde passagiernummer is niet bekend bij ons.</p>";
+    }elseif(CheckIfToMuchWeight($passagiernummer, $gewicht)) {
+      $melding = "<p class='error-msg'>De passagier heeft teveel bagage</p>";
+    }
+
+  // } 
+  // catch (PDOException) {
+  //   $melding = "<p class='error-msg'>Er is iets misgegaan met het inchecken van uw koffer.</p>";
+  // }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkin Gelre - Nieuwe Vlucht</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Checkin Gelre - Home</title>
+    <link rel="stylesheet" href="css/style.re.css">
 </head>
 <body>
     <header>
         <h1>Checkin Gelre</h1>
         <nav>
             <ul>
-                <li><a href="Home.php">Startpagina</a></li>
-                <li><a href="employee.php">Toevoegen</a></li>
-                <li><a href="flights.php">Vluchten</a></li>
+                <li><a href="home.php">Startpagina</a></li>
+                <li><a href="new_flight.php">Nieuwe Vlucht</a></li>
+                <li><a href="contact.php">Contact</a></li>
             </ul>
         </nav>
     </header>
+  <main>
+    <form action="employee.php" method="post">
 
-    <section id="logout">
-            <form action="endsession.php" method="POST">
-                <input type="submit" value="Uitloggen">
-            </form>
-        </section>
+      <label for="pnum">Passagiersnummer: </label>
+      <input type="number" id="pnum" name="Passagiernummer" placeholder="Passagiersnummer">
 
-    <main>
-        <section id="new-flight">
-            <h2>Nieuwe Vlucht</h2>
-            <div id="flightSearch">
-                <h3>Vluchtgegevens Ophalen</h3>
-                <form>
-                    <label for="flightNumber">Vluchtnummer:</label>
-                    <input type="number" id="flightNumber" name="flightNumber" required>
-                    <button type="button">Zoeken</button>
-                </form>
-                <section id="flightDetails" style="display: none;">
-                    <h3>Details van Vlucht</h3>
-                    <p>Vluchtnummer: <span id="resultFlightNumber"></span></p>
-                    <p>Bestemming: <span id="resultDestination"></span></p>
-                    <p>Aankomsttijd: <span id="resultArrivalTime"></span></p>
-                    <p>Vertrektijd: <span id="resultDepartureTime"></span></p>
-                    <p>Luchtvaartmaatschappij: <span id="resultAirline"></span></p>
-                    <p>Stoelnummer: <span id="resultSeatNumber"></span></p>
-                    <p>Gate: <span id="resultGate"></span></p>
-                    <p>Check-in Balie: <span id="resultCheckinCounter"></span></p>
-                </section>
-            </div>
-        </section>
-        
-        <section id="passengerDetails">
-            <h2>Nieuwe Passagier</h2>
-            <form id="passengerForm">
-                <label for="destination">Bestemming:</label>
-                <input type="text" id="destination" name="destination" required>
-                <label for="passengerFlightNumber">Vluchtnummer:</label>
-                <input type="text" id="passengerFlightNumber" name="passengerFlightNumber" required>
-                <label for="airline">Luchtvaartmaatschappij:</label>
-                <input type="text" id="airline" name="airline" required>
-                <label for="departureAirport">Vertrek luchthaven:</label>
-                <input type="text" id="departureAirport" name="departureAirport" required>
-                <label for="arrivalAirport">Aankomst luchthaven:</label>
-                <input type="text" id="arrivalAirport" name="arrivalAirport" required>
-                <label for="departureDate">Vertrekdatum:</label>
-                <input type="date" id="departureDate" name="departureDate" required>
-                <label for="departureTime">Vertrektijd:</label>
-                <input type="text" id="departureTime" name="departureTime" required>
-                <label for="arrivalDate">Aankomstdatum:</label>
-                <input type="date" id="arrivalDate" name="arrivalDate" required>
-                <label for="arrivalTime">Aankomsttijd:</label>
-                <input type="text" id="arrivalTime" name="arrivalTime" required>
-                <label for="passengerName">Naam passagier:</label>
-                <input type="text" id="passengerName" name="passengerName" required>
-                <label for="passengerLastName">Achternaam passagier:</label>
-                <input type="text" id="passengerLastName" name="passengerLastName" required>
-                <label for="passengerEmail">E-mail passagier:</label>
-                <input type="email" id="passengerEmail" name="passengerEmail" required>
-                <button type="submit">Toevoegen</button>
-            </form>
-            <?php if (isset($error)): ?>
-                <p class="error"><?=$error ?></p>
-            <?php endif; ?>
-        </section>
+      <label for="gewicht">Gewicht van koffer: </label>
+      <input type="text" pattern="\d{1,6}(\.\d{1,2})?" id="gewicht" name="gewicht" placeholder="Gewicht" title="Voer een geldig gewicht in (maximaal 6 cijfers voor de komma en maximaal 2 decimalen)">
 
-        <section id="luggageCheckIn">
-          <h2>Koffers inchecken</h2>
-          <form action="medewerkerportaal.php" method="post" class="luggage-check-in-form">
-            <?php if (isset($error3)): ?>
-              <p class="error3"><?=$error3 ?></p>
-            <?php endif; ?>
-            <label for="passagiernummerkoffercheck">Passagiernummer:</label>
-            <input type="number" id="passagiernummerkoffercheck" name="passagiernummerkoffercheck" required>
-            <label for="gewichtkoffercheck">Gewicht van de koffer:</label>
-            <input type="number" id="gewichtkoffercheck" name="gewichtkoffercheck" max="30" required>
-            <button type="submit">Inchecken</button>
-          </form>
-        </section>
+      <input type="submit" id="opslaan" name="opslaan" value="Check koffer in">
 
+    </form>
+  </main>
 
-    
-        <?php
-        // Make a query to fetch flight data from the database or API
-        $flights = [
-          ['flightNumber' => '123', 'destination' => 'New York', 'airline' => 'Air Gelre', 'seatNumber' => '15A'],
-          ['flightNumber' => '456', 'destination' => 'London', 'airline' => 'Sky Express', 'seatNumber' => '22C'],
-          ['flightNumber' => '789', 'destination' => 'Paris', 'airline' => 'Windy Airways', 'seatNumber' => '10B'],
-          ['flightNumber' => '101', 'destination' => 'Tokyo', 'airline' => 'Sun Airlines', 'seatNumber' => '7F'],
-          ['flightNumber' => '202', 'destination' => 'Sydney', 'airline' => 'Skies Air', 'seatNumber' => '12D'],
-        ];
-        ?>
-        <section id="flights-list">
-          <h2>Beschikbare Vluchten</h2>
-          <ul>
-            <?php foreach ($flights as $flight): ?>
-              <li><strong>Vluchtnummer:</strong> <?=$flight['flightNumber'] ?>, <strong>Bestemming:</strong> <?=$flight['destination'] ?>, <strong>Luchtvaartmaatschappij:</strong> <?=$flight['airline'] ?>, <strong>Stoelnummer:</strong> <?=$flight['seatNumber'] ?></li>
-            <?php endforeach; ?>
-          </ul>
-        </section>
-        
-        <section id="logout">
-            <form action="endsession.php" method="POST">
-                <input type="submit" value="Uitloggen">
-            </form>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2023 Checkin Gelre. Alle rechten voorbehouden.</p>
-    </footer>
+  <footer>
+    <p>&copy; 2023 Gelre Airport. All rights reserved.</p>
+  </footer>
 </body>
+
 </html>

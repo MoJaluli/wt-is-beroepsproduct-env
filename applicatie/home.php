@@ -38,7 +38,8 @@ function logError($message) {
             <ul>
                 <li><a href="home.php">Startpagina</a></li>
                 <li><a href="new_flight.php">Nieuwe Vlucht</a></li>
-                <li><a href="contact.php">Contact</a></li>            </ul>
+                <li><a href="contact.php">Contact</a></li>
+            </ul>
         </nav>
     </header>
 
@@ -61,6 +62,8 @@ function logError($message) {
                 <input type="text" id="wachtwoord" name="wachtwoord" placeholder="wachtwoord" required>
                 <button type="submit">Inloggen</button>
             </form>
+            <a href="../registreren.php">registreren</a>
+            
         </section>
         
         <section class="login-section">

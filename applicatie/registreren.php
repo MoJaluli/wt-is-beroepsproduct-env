@@ -100,24 +100,22 @@ if (isset($_POST['registeren'])) {
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.re.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="UTF-8" />
     <title>Gelre airport</title>
 </head>
 
-<body>
-    <header>
-        <input type="checkbox" id="menu-toggle" />
-        <label for="menu-toggle"></label>
+ <header>
+        <h1>Checkin Gelre</h1>
         <nav>
             <ul>
-                <li><a href="index.php">Home</a></li>
-                <li><a href="Kofferinchecken.php">Koffer inchecken</a></li>
-                <li><a href="Login.php">Log in voor medewerkers</a></li>
+                <li><a href="home.php">Startpagina</a></li>
+                <li><a href="new_flight.php">Nieuwe Vlucht</a></li>
+                <li><a href="contact.php">Contact</a></li>
+
             </ul>
         </nav>
-        <a>Log in</a>
     </header>
 
     <main>
@@ -134,7 +132,13 @@ if (isset($_POST['registeren'])) {
             <input type="email" name="email" id="email" placeholder="Email">
 
             <label for="gebruikersrol">Gebruikersrol: </label>
-            <input type="text" name="gebruikersrol" id="gebruikersrol" placeholder="Gebruikersrol">
+<div class="radio-group">
+    <input type="radio" name="gebruikersrol" id="medewerker" value="medewerker">
+    <label for="medewerker">Medewerker</label>
+    <input type="radio" name="gebruikersrol" id="passagier" value="passagier">
+    <label for="passagier">Passagier</label>
+</div>
+
 
 
             <input type="submit" id="registeren" name="registeren" value="registeren">
@@ -143,8 +147,10 @@ if (isset($_POST['registeren'])) {
     </main>
 
     <footer>
-        <p>&copy; 2023 Gelre Airport. All rights reserved.</p>
+        <?php
+        require_once 'footer.php';
+        ?>
     </footer>
-</body>
+</>
 
 </html>

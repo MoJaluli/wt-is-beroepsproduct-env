@@ -82,7 +82,9 @@ $vlucht_table .= '</table>';
     </section>
 
     <footer>
-        <p>&copy; 2023 Checkin Gelre. Alle rechten voorbehouden.</p>
+        <?php
+        require_once 'footer.php';
+        ?>
     </footer>
 </body>
 </html>

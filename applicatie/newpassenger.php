@@ -80,8 +80,7 @@ if (isset($_POST['Nieuwe_Passagier'])) {
             <nav>
                 <ul>
                     <li><a href="home.php">Startpagina</a></li>
-                    <li><a href="newpassenger.php">Nieuwe Passagier</a></li>
-                    <l1><a href="new_flight.php">Nieuwe Vlucht</a></l1>
+                    <li><a href="new_flight.php">Nieuwe vluchten</a></li>
                 </ul>
             </nav>
         </header>

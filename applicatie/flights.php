@@ -58,8 +58,7 @@ $vlucht_table .= '</table>';
         <nav>
             <ul>
                 <li><a href="Home.php">Startpagina</a></li>
-                <li><a href="new_flight.php">Nieuwe Vlucht</a></li>
-                <li><a href="contact.php">Contact</a></li>
+                <li><a href="passenger.php">Inchecken bagage</a></li>
             </ul>
         </nav>
     </header>

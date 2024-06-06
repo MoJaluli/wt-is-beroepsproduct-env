@@ -7,31 +7,21 @@ session_start();
 // Initialize the session error array
 $_SESSION['error'] = [];
 
-// Function to log errors for debugging
-function logError($message) {
-    error_log($message);
-
-    if (isset($_SESSION['error'])) {
-        $_SESSION['error']['global'] = $message;
-    }
-
-    header('Location: 404.php');
-    exit();
-}
-
 // Meldingen voor login
-$melding = '';
+$melding_passagier = '';
+$melding_medewerker = '';
 
-// Login-functionaliteit
-if (isset($_POST['login'])) {
+// Login-functionaliteit voor passagiers
+if (isset($_POST['login_passagier'])) {
     $gebruikersnaam = htmlspecialchars(trim($_POST['gebruikersnaam']));
     $wachtwoord = htmlspecialchars(trim($_POST['wachtwoord']));
     try {
         $db = maakVerbinding();
 
         $sql = "SELECT wachtwoordhash
-        FROM Gebruiker
-        WHERE gebruikersnaam = :var_gebruikersnaam";
+                FROM Gebruiker
+                WHERE gebruikersnaam = :var_gebruikersnaam";
+                echo($sql);
 
         $query = $db->prepare($sql);
 
@@ -49,15 +39,57 @@ if (isset($_POST['login'])) {
                 header("Location: passenger.php");
                 exit();
             } else {
-                $melding = "<p class='error-msg'>Fout: incorrecte inloggegevens!</p>";
+                $melding_passagier = "<p class='error-msg'>Fout: incorrecte inloggegevens!</p>";
             }
         } else {
-            $melding = "<p class='error-msg'>Fout: incorrecte inloggegevens!</p>";
+            $melding_passagier = "<p class='error-msg'>Fout: incorrecte inloggegevens!</p>";
         }
     } catch (PDOException $e) {
-        $melding = "<p class='error-msg'>Er is iets misgegaan. Neem contact op met de systeembeheerder.</p>" . $e->getMessage();
+        $melding_passagier = "<p class='error-msg'>Er is iets misgegaan. Neem contact op met de systeembeheerder.</p>" . $e->getMessage();
     }
 }
+?>
+
+<?php
+
+require_once 'sanitize.php';
+require_once 'db_connectie.php';
+
+// Login-functionaliteit voor medewerkers
+if (isset($_POST['login_medewerker'])) {
+    $balienummer = $_POST['balienummer'];
+    $wachtwoord = htmlspecialchars(trim($_POST['wachtwoord']));
+
+    
+    try {
+        $db = maakVerbinding();
+
+        $sql = "SELECT balienummer, wachtwoord FROM Balie WHERE balienummer = :balienummer AND wachtwoord = :password";
+
+        echo($sql);
+
+        $query = $db->prepare($sql);
+
+        $data = [
+            'balienummer' => (int) $balienummer,
+            'password' => $wachtwoord,
+        ];
+
+        $query->execute($data);
+
+        if ($rij = $query->fetch()) {
+            // medewerker gevonden
+            $_SESSION['medewerker'] = $balienummer;
+            header("Location: employee.php");
+            exit();
+        } else {
+            $melding_medewerker = "<p class='error-msg'>Fout: incorrecte inloggegevens!</p>";
+        }
+    } catch (PDOException $e) {
+        $melding_medewerker = "<p class='error-msg'>Er is iets misgegaan. Neem contact op met de systeembeheerder.</p>" . $e->getMessage();
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -88,35 +120,31 @@ if (isset($_POST['login'])) {
     <div class="login-sections">
         <section class="login-section">
             <h2>Passagier Inloggen</h2>
-            <?php if (isset($melding)) { echo $melding; } ?>
+            <?php if (!empty($melding_passagier)) { echo $melding_passagier; } ?> 
             <form class="text-center" method="POST" action="">
                 <label for="gebruikersnaam">Gebruikersnaam:</label>
                 <input type="text" id="gebruikersnaam" name="gebruikersnaam" placeholder="Gebruikersnaam" required>
                 <label for="wachtwoord">Wachtwoord:</label>
                 <input type="password" id="wachtwoord" name="wachtwoord" placeholder="Wachtwoord" required>
-                <button type="submit" name="login">Inloggen</button>
+                <button type="submit" name="login_passagier">Inloggen</button>
             </form>
             <a href="registreren.php">registreren</a>
         </section>
 
         <section class="login-section">
-            <h2>Medewerker Inloggen</h2>
-            <?php if (isset($error)) { ?>
-                <p class="error"><?= htmlspecialchars($error) ?></p>
-            <?php } ?>
-            <form class="text-center" method="POST" action="employee.php">
-                <label for="ballienummer">Ballienummer:</label>
-                <input type="text" id="ballienummer" name="ballienummer" placeholder="Ballienummer" required>
-                <label for="wachtwoord">Wachtwoord:</label>
-                <input type="password" id="wachtwoord" name="wachtwoord" placeholder="Wachtwoord" required>
-                <button type="submit">Inloggen</button>
-            </form>
-        </section>
+    <h2>Medewerker Inloggen</h2>
+    <?php if (!empty($melding_medewerker)) { echo $melding_medewerker; } ?>
+    <form class="text-center" method="POST" action="">
+        <label for="balienummer">Ballienummer:</label>
+        <input type="text" id="balienummer" name="balienummer" placeholder="Ballienummer" required>
+        <label for="wachtwoord">Wachtwoord:</label>
+        <input type="password" id="wachtwoord" name="wachtwoord" placeholder="Wachtwoord" required>
+        <button type="submit" name="login_medewerker">Inloggen</button>
+    </form>
+</section>
     </div>
     <footer>
-        <?php
-     require_once 'footer.php';
-        ?>
+        <?php require_once 'footer.php'; ?>
     </footer>
 </body>
 </html>

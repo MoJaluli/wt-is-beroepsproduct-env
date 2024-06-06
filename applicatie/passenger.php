@@ -159,7 +159,6 @@ function CheckIfToMuchWeight($passagiernummer, $gewicht) {
         <nav>
             <ul>
                 <li><a href="Home.php">Startpagina</a></li>
-                <li><a href="new_flight.php">Nieuwe Vlucht</a></li>
                 <li><a href="flights.php">vluchten</a></li>
             </ul>
         </nav>

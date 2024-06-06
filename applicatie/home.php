@@ -85,9 +85,11 @@ if (isset($_POST['login_medewerker'])) {
         } else {
             $melding_medewerker = "<p class='error-msg'>Fout: incorrecte inloggegevens!</p>";
         }
+        
     } catch (PDOException $e) {
         $melding_medewerker = "<p class='error-msg'>Er is iets misgegaan. Neem contact op met de systeembeheerder.</p>" . $e->getMessage();
     }
+
 }
 
 ?>
@@ -106,8 +108,8 @@ if (isset($_POST['login_medewerker'])) {
         <nav>
             <ul>
                 <li><a href="home.php">Startpagina</a></li>
-                <li><a href="new_flight.php">Nieuwe Vlucht</a></li>
-                <li><a href="newpassenger.php">Nieuwe passagier</a></li>
+                <li><a href="flights.php">Vluchten</a></li>
+                <li><a href="employee.php">inchecken</a></li>
             </ul>
         </nav>
     </header>

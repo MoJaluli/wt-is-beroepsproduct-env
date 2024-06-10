@@ -7,44 +7,41 @@ require_once 'db_connectie.php';
 
 session_start();
 
-// Initialize the session error array
-$_SESSION['error'] = [];
-
-// Meldingen voor login
-$melding_passagier = '';
-$melding_medewerker = '';
-
 // Login-functionaliteit voor passagiers
 if (isset($_POST['login_passagier'])) {
     $gebruikersnaam = htmlspecialchars(trim($_POST['gebruikersnaam']));
     $wachtwoord = htmlspecialchars(trim($_POST['wachtwoord']));
-    $db = maakVerbinding();
+   
+    if (!is_numeric($gebruikersnaam) || $gebruikersnaam < 10000 || $gebruikersnaam > 99999 || (int) $gebruikersnaam != $gebruikersnaam) {
 
-    $sql = "SELECT wachtwoordhash
-                FROM Gebruiker
-                WHERE gebruikersnaam = :var_gebruikersnaam";
-    echo ($sql);
+        $melding_passagier = "<p class='error-msg'>Fout: incorrecte inloggegevens!</p>";
+    } else {
+        $db = maakVerbinding();
 
-    $query = $db->prepare($sql);
+        $sql = "SELECT wachtwoord FROM Passagier WHERE passagiernummer = :passagiernummer";
 
-    $data = [
-        'var_gebruikersnaam' => $gebruikersnaam,
-    ];
+        $query = $db->prepare($sql);
 
-    $query->execute($data);
+        $data = [
+            ':passagiernummer' => (int) $gebruikersnaam
+        ];
 
-    if ($rij = $query->fetch()) {
-        // gebruiker gevonden
-        $passwordhash = $rij['wachtwoordhash'];
-        if (password_verify($wachtwoord, $passwordhash)) {
-            $_SESSION['gebruiker'] = $gebruikersnaam;
-            header("Location: passenger.php");
-            exit();
+        $query->execute($data);
+
+        if ($rij = $query->fetch()) {
+            $passwordhash = $rij['wachtwoord'];
+
+            if (password_verify($wachtwoord, $passwordhash)) {
+                // passagier gevonden
+                $_SESSION['passagier'] = $gebruikersnaam;
+                header("Location: passenger.php");
+                exit();
+            } else {
+                $melding_passagier = "<p class='error-msg'>Fout: incorrecte inloggegevens!</p>";
+            }
         } else {
             $melding_passagier = "<p class='error-msg'>Fout: incorrecte inloggegevens!</p>";
         }
-    } else {
-        $melding_passagier = "<p class='error-msg'>Fout: incorrecte inloggegevens!</p>";
     }
 }
 ?>
@@ -128,7 +125,7 @@ if (isset($_POST['login_medewerker'])) {
             } ?>
             <form class="text-center" method="POST" action="">
                 <label for="gebruikersnaam">Gebruikersnaam:</label>
-                <input type="text" id="gebruikersnaam" name="gebruikersnaam" placeholder="Gebruikersnaam" required>
+                <input type="nummeric" id="gebruikersnaam" name="gebruikersnaam" placeholder="Gebruikersnaam" min = '1' max= '1000' step= '1'required>
                 <label for="wachtwoord">Wachtwoord:</label>
                 <input type="password" id="wachtwoord" name="wachtwoord" placeholder="Wachtwoord" required>
                 <button type="submit" name="login_passagier">Inloggen</button>

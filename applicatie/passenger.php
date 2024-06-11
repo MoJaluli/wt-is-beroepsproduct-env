@@ -119,7 +119,6 @@ function CheckIfToMuchWeight($passagiernummer, $gewicht) {
         $data = [
           'var_passagiernummer' => $passagiernummer,
           'var_gewicht' => $gewicht,
-          'var_passagiernummer2' => $passagiernummer,
         ];
   
         $query->execute($data);
@@ -171,11 +170,18 @@ function CheckIfToMuchWeight($passagiernummer, $gewicht) {
 
     <form action="passenger.php" method="post">
 
+
+
       <label for="pnum">Passagiersnummer: </label>
-      <input type="number" id="pnum" name="Passagiernummer" placeholder="Passagiersnummer">
+      <input type="number" id="pnum" name="Passagiernummer" id= 'passagiernummer' placeholder="Passagiersnummer">
+
+      <label for="aantal">Aantal koffers: </label>
+      <input type="number" id="aantal" name="aantal" placeholder="Aantal koffers">
+
 
       <label for="gewicht">Gewicht van koffer: </label>
       <input type="text" pattern="\d{1,6}(\.\d{1,2})?" id="gewicht" name="gewicht" placeholder="Gewicht" title="Voer een geldig gewicht in (maximaal 6 cijfers voor de komma en maximaal 2 decimalen)">
+      <br>
 
       <input type="submit" id="opslaan" name="opslaan" value="Check koffer in">
 

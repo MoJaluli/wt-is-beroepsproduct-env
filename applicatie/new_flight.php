@@ -155,9 +155,6 @@ if (isset($_POST['submit'])) {
             </form>
         </section>
     </main>
-
-    <footer>
        <?php require_once 'footer.php'; ?>
-    </footer>
 </body>
 </html>

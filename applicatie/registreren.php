@@ -146,11 +146,10 @@ if (isset($_POST['registeren'])) {
         </form>
     </main>
 
-    <footer>
         <?php
         require_once 'footer.php';
         ?>
-    </footer>
+
 </>
 
 </html>

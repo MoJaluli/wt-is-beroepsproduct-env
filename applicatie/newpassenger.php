@@ -81,6 +81,7 @@ if (isset($_POST['Nieuwe_Passagier'])) {
                 <ul>
                     <li><a href="home.php">Startpagina</a></li>
                     <li><a href="new_flight.php">Nieuwe vluchten</a></li>
+                    <li><a href="vluchtgegevens.php">Inchecken</a></li>
                 </ul>
             </nav>
         </header>
@@ -114,8 +115,6 @@ if (isset($_POST['Nieuwe_Passagier'])) {
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2023 Checkin Gelre. Alle rechten voorbehouden.</p>
-    </footer>
+   <?php require_once 'footer.php' ?>
 </body>
 </html>

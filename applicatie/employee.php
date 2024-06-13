@@ -156,6 +156,7 @@ VALUES (:var_passagiernummer,(Select MAX(objectvolgnummer) from Bagageobject WHE
                 <li><a href="home.php">Startpagina</a></li>
                 <li><a href="new_flight.php">Nieuwe Vlucht</a></li>
                 <li><a href="newpassenger.php">Nieuwe passagier</a></li>
+                <li><a href="vluchtgegevens.php">Vlucht aanpassen</a></li>
             </ul>
         </nav>
     </header>
@@ -173,9 +174,7 @@ VALUES (:var_passagiernummer,(Select MAX(objectvolgnummer) from Bagageobject WHE
     </form>
   </main>
 
-  <footer>
-    <p>&copy; 2023 Gelre Airport. All rights reserved.</p>
-  </footer>
+ <?php require_once 'footer.php'; ?>
 </body>
 
 </html>

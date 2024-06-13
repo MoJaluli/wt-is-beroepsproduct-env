@@ -80,10 +80,8 @@ $vlucht_table .= '</table>';
 
     </section>
 
-  <footer>
         <?php
         require_once 'footer.php';
         ?>
-    </footer>
 </body>
 </html>

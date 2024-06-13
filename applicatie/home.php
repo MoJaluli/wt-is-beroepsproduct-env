@@ -107,7 +107,6 @@ if (isset($_POST['login_medewerker'])) {
             <ul>
                 <li><a href="home.php">Startpagina</a></li>
                 <li><a href="flights.php">Vluchten</a></li>
-                <li><a href="employee.php">inchecken</a></li>
             </ul>
         </nav>
     </header>
@@ -147,9 +146,9 @@ if (isset($_POST['login_medewerker'])) {
             </form>
         </section>
     </div>
-    <footer>
+
         <?php require_once 'footer.php'; ?>
-    </footer>
+
 </body>
 
 </html>

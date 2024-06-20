@@ -1,5 +1,17 @@
 <?php
-function sanitize($data) {
-    return htmlspecialchars(strip_tags(trim($data)));
+
+function sanitize($data)
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
 }
-?>
+
+function validate($data)
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}

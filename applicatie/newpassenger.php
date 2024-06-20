@@ -1,5 +1,6 @@
 <?php
-require_once 'db_connectie.php';
+require_once 'helpers/db_connectie.php';
+require_once 'helpers/sanitize.php';
 session_start();
 
 $vluchtnummers = '';
@@ -81,7 +82,7 @@ if (isset($_POST['Nieuwe_Passagier'])) {
                 <ul>
                     <li><a href="home.php">Startpagina</a></li>
                     <li><a href="new_flight.php">Nieuwe vluchten</a></li>
-                    <li><a href="vluchtgegevens.php">Inchecken</a></li>
+                    <li><a href="baggage-inchecken.php">Inchecken</a></li>
                 </ul>
             </nav>
         </header>
@@ -114,7 +115,8 @@ if (isset($_POST['Nieuwe_Passagier'])) {
             </form>
         </section>
     </main>
-
-   <?php require_once 'footer.php' ?>
+    <?php
+  require_once 'sub/footer.php';
+  ?>
 </body>
 </html>

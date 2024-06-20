@@ -1,7 +1,7 @@
-  <?php
+<?php
 
-require_once 'helpers/db_connectie.php';
-require_once 'helpers/sanitize.php';
+require_once '../helpers/db_connectie.php';
+require_once '../helpers/sanitize.php';
 
 try {
     $db = maakVerbinding();
@@ -48,7 +48,7 @@ $vlucht_table .= '</table>';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkin Gelre - Vluchten</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
    
 </head>
 <body>
@@ -57,8 +57,7 @@ $vlucht_table .= '</table>';
         <h1>Checkin Gelre</h1>
         <nav>
             <ul>
-                <li><a href="Home.php">Startpagina</a></li>
-                <li><a href="passenger-info.php">Passagiers</a></li>
+                <li><a href="../Home.php">Startpagina</a></li>
             </ul>
         </nav>
     </header>

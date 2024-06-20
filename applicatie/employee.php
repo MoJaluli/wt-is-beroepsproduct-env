@@ -1,180 +1,71 @@
 <?php
-require_once 'db_connectie.php';
+require_once 'helpers/db_connectie.php';
+require_once 'helpers/sanitize.php';
+session_start();
 
-
-function CheckIfToMuchWeight($passagiernummer, $gewicht) {
-  $db = maakVerbinding();
-
-  $sqlMaxGewicht = "select v.max_gewicht_pp
-  from Passagier p 
-  JOIN Vlucht v ON p.vluchtnummer = v.vluchtnummer
-  LEFT JOIN Bagageobject b ON p.passagiernummer = b.passagiernummer
-  WHERE p.passagiernummer = :var_passagiernummer1
-   GROUP BY p.passagiernummer, p.naam, v.vluchtnummer, v.max_gewicht_pp";
-
-  $sqlCheckAlIngecheckteGewicht = "select v.max_gewicht_pp, sum(b.gewicht) as gewicht_bagage 
-  from Passagier p 
-  JOIN Vlucht v ON p.vluchtnummer = v.vluchtnummer
-  LEFT JOIN Bagageobject b ON p.passagiernummer = b.passagiernummer
-  WHERE p.passagiernummer = :var_passagiernummer
-   GROUP BY p.passagiernummer, p.naam, v.vluchtnummer, v.max_gewicht_pp
-                HAVING COALESCE(SUM(b.gewicht), 0) <= v.max_gewicht_pp";
-                
-$data_sqlCheckAlIngecheckteGewicht = [
-  'var_passagiernummer' => $passagiernummer,
-  
-];
-$data_sqlMaxGewicht = [
-  'var_passagiernummer1' => $passagiernummer,
-];
-$queryMaxGewicht = $db->prepare($sqlMaxGewicht);
-$queryMaxGewicht->execute($data_sqlMaxGewicht);
-
-$queryCheckAlIngecheckteGewicht = $db->prepare($sqlCheckAlIngecheckteGewicht);
-$queryCheckAlIngecheckteGewicht->execute($data_sqlCheckAlIngecheckteGewicht);
-
-$result = $queryMaxGewicht->fetchAll(PDO::FETCH_ASSOC);
-if ($queryCheckAlIngecheckteGewicht->rowCount() == 0) {
-  if($gewicht > $result[0]['max_gewicht_pp'])
-  return true;
+// Check if user is logged in
+if (!isset($_SESSION['ingelogd']) || $_SESSION['ingelogd'] !== true) {
+    header("Location: employee.php");
+    exit();
 }
 
-$resultCheck = $queryCheckAlIngecheckteGewicht->fetchAll(PDO::FETCH_ASSOC);
-if($gewicht+$resultCheck[0]['gewicht_bagage']> $result[0]['max_gewicht_pp']){
-  return true;
-}
-return false;
-}
-function CheckIfToMuchBagages($passagiernummer, $aantal)
-{
-  $db = maakVerbinding();
-  // Voorbereiden insert into statement
+// Connect to the database
+$verbinding = maakVerbinding();
 
-
-  $sql = "select MAX(objectvolgnummer) AS nummer from Bagageobject WHERE passagiernummer = :var_passagiernummer";
-
-  $query = $db->prepare($sql);
-
-  // Data voorbereiden
-
-  $data = [
-    'var_passagiernummer' => $passagiernummer,
-  ];
-
-  $query->execute($data);
-
-  if ($query->rowCount() == 0) {
-    return false;
-  }
-  $result = $query->fetchAll(PDO::FETCH_ASSOC);
-  return $result[0]['nummer'] >= $aantal ? true : false;
-}
-
-
-function CheckIfPassengernumberExists($passagiernummer)
-{
-  $db = maakVerbinding();
-  // Voorbereiden insert into statement
-
-
-  $sql = "select passagiernummer from Bagageobject WHERE passagiernummer = :var_passagiernummer";
-
-  $query = $db->prepare($sql);
-
-  // Data voorbereiden
-
-  $data = [
-    'var_passagiernummer' => $passagiernummer,
-  ];
-
-  $query->execute($data);
-
-  if ($query->rowCount() == 0) {
-    return false;
-  }else{
-    return true;
-  }
-  
-}
-
-if (isset($_POST['opslaan'])) {
-  $passagiernummer = intval(htmlspecialchars(trim($_POST['Passagiernummer'])));
-  $gewicht = intval(htmlspecialchars(trim($_POST['gewicht'])));
-
-  // Er zijn geen fouten, door naar sql insert into...
-  //try {
-    $db = maakVerbinding();
-    // Voorbereiden insert into statement
-    if (!CheckIfToMuchBagages($passagiernummer, 9) && CheckIfPassengernumberExists($passagiernummer) && !CheckIfToMuchWeight($passagiernummer, $gewicht)) {
-      
-
-      $sql = "INSERT INTO Bagageobject (passagiernummer, objectvolgnummer, gewicht)
-VALUES (:var_passagiernummer,(Select MAX(objectvolgnummer) from Bagageobject WHERE passagiernummer = :var_passagiernummer2)  +1 ,:var_gewicht)";
-
-      $query = $db->prepare($sql);
-
-      // Data voorbereiden
-
-      $data = [
-        'var_passagiernummer' => $passagiernummer,
-        'var_gewicht' => $gewicht,
-        'var_passagiernummer2' => $passagiernummer,
-      ];
-
-      $query->execute($data);
-      if ($query) {
-        $melding = "<p class='success-msg'>U heeft een koffer ingecheckt.</p>";
-      }
-    } elseif(CheckIfToMuchBagages($passagiernummer, 9)) {
-      $melding = "<p class='error-msg'>Je hebt al 9 of meer koffers ingecheckt.</p>";
-    }elseif(!CheckIfPassengernumberExists($passagiernummer)) {
-      $melding = "<p class='error-msg'>Het ingevoerde passagiernummer is niet bekend bij ons.</p>";
-    }elseif(CheckIfToMuchWeight($passagiernummer, $gewicht)) {
-      $melding = "<p class='error-msg'>De passagier heeft teveel bagage</p>";
-    }
-
-  // } 
-  // catch (PDOException) {
-  //   $melding = "<p class='error-msg'>Er is iets misgegaan met het inchecken van uw koffer.</p>";
-  // }
-}
-
+// Fetch all passengers
+$sqlquery = "SELECT * FROM Passagier";
+$query = $verbinding->prepare($sqlquery);
+$query->execute();
+$passagiers = $query->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkin Gelre - Home</title>
-    <link rel="stylesheet" href="css/style.re.css">
+    <title>Passagiers Overzicht</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Checkin Gelre</h1>
-        <nav>
-            <ul>
-                <li><a href="home.php">Startpagina</a></li>
-                <li><a href="new_flight.php">Nieuwe Vlucht</a></li>
-                <li><a href="newpassenger.php">Nieuwe passagier</a></li>
-                <li><a href="vluchtgegevens.php">Vlucht aanpassen</a></li>
-            </ul>
-        </nav>
+        <h1>Passagiers Overzicht</h1>
     </header>
-  <main>
-    <form action="employee.php" method="post">
 
-      <label for="pnum">Passagiersnummer: </label>
-      <input type="number" id="pnum" name="Passagiernummer" placeholder="Passagiersnummer">
-
-      <label for="gewicht">Gewicht van koffer: </label>
-      <input type="text" pattern="\d{1,6}(\.\d{1,2})?" id="gewicht" name="gewicht" placeholder="Gewicht" title="Voer een geldig gewicht in (maximaal 6 cijfers voor de komma en maximaal 2 decimalen)">
-
-      <input type="submit" id="opslaan" name="opslaan" value="Check koffer in">
-
-    </form>
-  </main>
-
- <?php require_once 'footer.php'; ?>
+    <main>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Passagiernummer</th>
+                    <th>Naam</th>
+                    <th>Vluchtnummer</th>
+                    <th>Geslacht</th>
+                    <th>Balienummer</th>
+                    <th>Stoel</th>
+                    <th>Inchecktijdstip</th>
+                    <th>Acties</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($passagiers as $passagier): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($passagier['passagiernummer']) ?></td>
+                        <td><?= htmlspecialchars($passagier['naam']) ?></td>
+                        <td><?= htmlspecialchars($passagier['vluchtnummer']) ?></td>
+                        <td><?= htmlspecialchars($passagier['geslacht']) ?></td>
+                        <td><?= htmlspecialchars($passagier['balienummer']) ?></td>
+                        <td><?= htmlspecialchars($passagier['stoel']) ?></td>
+                        <td><?= htmlspecialchars($passagier['inchecktijdstip']) ?></td>
+                        <td>
+                            <form action="edit_passagier.php" method="get">
+                                <input type="hidden" name="passagiernummer" value="<?= $passagier['passagiernummer'] ?>">
+                                <button type="submit">Bewerken</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </main>
 </body>
-
 </html>

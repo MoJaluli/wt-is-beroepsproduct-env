@@ -1,13 +1,13 @@
 <?php
-require_once 'sanitize.php';
-require_once 'db_connectie.php';
-require_once 'home.php';
+require_once 'helpers/sanitize.php';
+require_once 'helpers/db_connectie.php';
+require_once 'pagina/home.php';
 
 ?>
     <footer>
-        <?php
-        require_once 'footer.php';
-        ?>
+    <?php
+  require_once 'sub/footer.php';
+  ?>
     </footer>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <?php
-require_once 'db_connectie.php';
+require_once 'helpers/db_connectie.php';
 $melding = '';
 
 function CheckIfUserExists($gebruikersnaam)
@@ -145,10 +145,9 @@ if (isset($_POST['registeren'])) {
 
         </form>
     </main>
-
-        <?php
-        require_once 'footer.php';
-        ?>
+    <?php
+  require_once 'sub/footer.php';
+  ?>
 
 </>
 

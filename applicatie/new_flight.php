@@ -1,6 +1,6 @@
 <?php
-require_once 'sanitize.php';
-require_once 'db_connectie.php';
+require_once 'helpers/sanitize.php';
+require_once 'helpers/db_connectie.php';
 
 $melding = '';
 $Gatecodes = '';
@@ -155,6 +155,8 @@ if (isset($_POST['submit'])) {
             </form>
         </section>
     </main>
-       <?php require_once 'footer.php'; ?>
+    <?php
+  require_once 'sub/footer.php';
+  ?>
 </body>
 </html>

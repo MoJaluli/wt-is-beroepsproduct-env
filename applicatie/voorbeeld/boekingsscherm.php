@@ -269,7 +269,9 @@ if (isset($_POST['passagiernummerkoffercheck']) != NULL) {
     </div>
     </div>
   </main>
-  <footer>Gelre Airport Copyright 2024</footer>
+  <?php
+  require_once '../footer.php';
+  ?>
 </body>
 
 </html>

@@ -2,8 +2,8 @@
 
 use function PHPSTORM_META\type;
 
-require_once 'sanitize.php';
-require_once 'db_connectie.php';
+require_once 'helpers/sanitize.php';
+require_once 'helpers/db_connectie.php';
 
 session_start();
 
@@ -48,8 +48,10 @@ if (isset($_POST['login_passagier'])) {
 
 <?php
 
-require_once 'sanitize.php';
-require_once 'db_connectie.php';
+
+require_once 'helpers/sanitize.php';
+require_once 'helpers/db_connectie.php';
+
 
 // Login-functionaliteit voor medewerkers
 if (isset($_POST['login_medewerker'])) {
@@ -77,7 +79,7 @@ if (isset($_POST['login_medewerker'])) {
             if (password_verify($wachtwoord, $passwordhash)) {
                 // medewerker gevonden
                 $_SESSION['medewerker'] = $balienummer;
-                header("Location: employee.php");
+                header("Location: medewerker.php");
                 exit();
             } else {
                 $melding_medewerker = "<p class='error-msg'>Fout: incorrecte inloggegevens!</p>";
@@ -106,7 +108,6 @@ if (isset($_POST['login_medewerker'])) {
         <nav>
             <ul>
                 <li><a href="home.php">Startpagina</a></li>
-                <li><a href="flights.php">Vluchten</a></li>
             </ul>
         </nav>
     </header>
@@ -147,8 +148,9 @@ if (isset($_POST['login_medewerker'])) {
         </section>
     </div>
 
-        <?php require_once 'footer.php'; ?>
-
+    <?php
+  require_once 'sub/footer.php';
+  ?>
 </body>
 
 </html>

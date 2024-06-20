@@ -70,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="css/style.css">
     <style>
         .success-message {
-
+            background-color: #dff0d8;
             color: #3c763d;
             border: 1px solid #d6e9c6;
             padding: 15px;
@@ -81,15 +81,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
 
+
     <header>
     <h1>Checkin Gelre</h1>
     <nav>
         <ul>
             <li><a href="Home.php">Startpagina</a></li>
-            <?php if(isset($_SESSION['baliemedewerker']) && $_SESSION['rol'] == 'medewerker'): ?>
                 <li><a href="medewerker.php">Medewerker</a></li>
                 <li><a href="flights.php">Vluchten</a></li>
-            <?php endif; ?>
+                <li><a href="passenger-info.php">Passagiers</a></li>
+
         </ul>
     </nav>
 </header>
@@ -126,9 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
 </section>
 
-<footer>
-    <p>&copy; 2024 Checkin Gelre. Alle rechten voorbehouden.</p>
-</footer>
+<?php require_once 'sub/footer.php'; ?>
 
 </body>
 </html>

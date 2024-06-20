@@ -68,5 +68,5 @@ $gebruiker = $stmt->fetch(PDO::FETCH_ASSOC);
         </div>
     </section>
 </body>
-
+<?php require_once 'sub/footer.php'; ?>
 </html>

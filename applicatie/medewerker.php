@@ -27,10 +27,7 @@
         <p>Dit is de homepagina voor medewerkers van Checkin Gelre. Gebruik de navigatie hierboven om toegang te krijgen tot verschillende functies.</p>
     </section>
 
-    <footer>
-        <p>&copy; 2024 Checkin Gelre. Alle rechten voorbehouden.</p>
-    </footer>
-
+    <?php require_once 'sub/footer.php'; ?>
 </body>
 
 </html>

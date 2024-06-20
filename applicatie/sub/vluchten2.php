@@ -57,7 +57,9 @@ $vlucht_table .= '</table>';
         <h1>Checkin Gelre</h1>
         <nav>
             <ul>
-                <li><a href="../Home.php">Startpagina</a></li>
+                <li><a href="../uitlog.php">Uitloggen</a></li>
+                <li><a href="../passenger.php">Mijn Gegevens</a></li>
+                <li><a href="baggage2.php">Baggage inchecken</a></li>
             </ul>
         </nav>
     </header>
@@ -80,7 +82,7 @@ $vlucht_table .= '</table>';
     </section>
 
     <?php
-  require_once 'sub/footer.php';
+  require_once 's../ub/footer.php';
   ?>
 </body>
 </html>

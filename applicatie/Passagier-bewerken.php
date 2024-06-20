@@ -81,19 +81,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
 
-
-    <header>
-    <h1>Checkin Gelre</h1>
-    <nav>
-        <ul>
-            <li><a href="Home.php">Startpagina</a></li>
-                <li><a href="medewerker.php">Medewerker</a></li>
-                <li><a href="flights.php">Vluchten</a></li>
-                <li><a href="passenger-info.php">Passagiers</a></li>
-
-        </ul>
-    </nav>
-</header>
+<header>
+        <h1>GelreAirport</h1>
+        <nav>
+            <ul>
+                <li><a href="medewerker.php">Medewerkers pagina</a></li>
+                <li><a href="uitlog.php">Uitloggen</a></li>
+            </ul>
+        </nav>
+    </header>
+    
 
 
 <section class="container">

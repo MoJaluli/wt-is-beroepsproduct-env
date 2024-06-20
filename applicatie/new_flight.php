@@ -93,13 +93,12 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="css/style.re.css">
 </head>
 <body>
-    <header>
-        <h1>Checkin Gelre</h1>
+<header>
+        <h1>GelreAirport</h1>
         <nav>
             <ul>
-                <li><a href="Home.php">Startpagina</a></li>
-                <li><a href="new_flight.php">Nieuwe Vlucht</a></li>
-                <li><a href="newpassenger.php">Nieuwe passagier</a></li>
+                <li><a href="medewerker.php">Medewerkers pagina</a></li>
+                <li><a href="uitlog.php">Uitloggen</a></li>
             </ul>
         </nav>
     </header>

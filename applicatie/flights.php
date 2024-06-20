@@ -52,13 +52,12 @@ $vlucht_table .= '</table>';
    
 </head>
 <body>
-    
-    <header>
-        <h1>Checkin Gelre</h1>
+<header>
+        <h1>GelreAirport</h1>
         <nav>
             <ul>
-                <li><a href="Home.php">Startpagina</a></li>
-                <li><a href="passenger-info.php">Passagiers</a></li>
+                <li><a href="medewerker.php">Medewerkers pagina</a></li>
+                <li><a href="uitlog.php">Uitloggen</a></li>
             </ul>
         </nav>
     </header>

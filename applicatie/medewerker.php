@@ -16,7 +16,9 @@
             <ul>
                 <li><a href="passenger-info.php">Passagiers</a></li>
                 <li><a href="flights.php">Vluchten</a></li>
-                <li><a href="add-flight.php">Vlucht Toevoegen</a></li>
+                <li><a href="new_flight.php">Vlucht Toevoegen</a></li>
+                <li><a href="baggage-inchecken.php">Baggage</a></li>
+                <li><a href="newpassenger.php">Nieuwe Passagier</a></li>
                 <li><a href="uitlog.php">Uitloggen</a></li>
             </ul>
         </nav>

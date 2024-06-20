@@ -1,6 +1,6 @@
 <?php
-require_once 'helpers/db_connectie.php';
-require_once 'helpers/sanitize.php';
+require_once '../helpers/db_connectie.php';
+require_once '../helpers/sanitize.php';
 
 function CheckIfTooMuchWeight($passagiernummer, $gewicht) {
   $db = maakVerbinding();
@@ -94,7 +94,7 @@ if (isset($_POST['opslaan'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Checkin Gelre - Home</title>
-  <link rel="stylesheet" href="css/style.re.css">
+  <link rel="stylesheet" href="../css/style.re.css">
 </head>
 
 <body>
@@ -102,8 +102,10 @@ if (isset($_POST['opslaan'])) {
     <h1>Checkin Gelre</h1>
     <nav>
       <ul>
-        <li><a href="medewerker.php">Medewerkers pagina</a></li>
-        <li><a href="uitlog.php">Uitloggen</a></li>
+        <li><a href="../uitlog.php">Uitloggen</a></li>
+        <li><a href="../sub/vluchten2.php">Vluchten</a></li>
+        <li><a href="../passenger.php">Mijn gegevens</a></li>
+
       </ul>
     </nav>
   </header>
@@ -129,7 +131,7 @@ if (isset($_POST['opslaan'])) {
   </main>
   <footer>
   <?php
-  require_once 'sub/footer.php';
+  require_once '../sub/footer.php';
   ?>
   </footer>
 </body>

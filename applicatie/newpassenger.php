@@ -76,16 +76,15 @@ if (isset($_POST['Nieuwe_Passagier'])) {
     <link rel="stylesheet" href="css/style.re.css">
 </head>
 <body>
-        <header>
-            <h1>Checkin Gelre</h1>
-            <nav>
-                <ul>
-                    <li><a href="home.php">Startpagina</a></li>
-                    <li><a href="new_flight.php">Nieuwe vluchten</a></li>
-                    <li><a href="baggage-inchecken.php">Inchecken</a></li>
-                </ul>
-            </nav>
-        </header>
+<header>
+        <h1>GelreAirport</h1>
+        <nav>
+            <ul>
+                <li><a href="medewerker.php">Medewerkers pagina</a></li>
+                <li><a href="uitlog.php">Uitloggen</a></li>
+            </ul>
+        </nav>
+    </header>
     </body>
     </html>
 

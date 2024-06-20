@@ -1,7 +1,7 @@
 <?php
 require_once 'helpers/sanitize.php';
 require_once 'helpers/db_connectie.php';
-require_once 'pagina/home.php';
+require_once 'home.php';
 
 ?>
     <footer>

@@ -39,7 +39,7 @@ while ($rij = $data->fetch(PDO::FETCH_ASSOC)) {
     $stoel = htmlspecialchars($rij['stoel']);
 
     // Bewerkingslink toevoegen
-    $edit_link = "passagier.php?id=" . $passagiernummer;
+    $edit_link = "passagier-bewerken.php?id=" . $passagiernummer;
     
     $passagier_table .= '<tr>';
     $passagier_table .= '<td>' . $passagiernummer . '</td>';
@@ -66,14 +66,13 @@ $passagier_table .= '</table>';
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    
-    <header>
-        <h1>Checkin Gelre</h1>
+
+<header>
+        <h1>GelreAirport</h1>
         <nav>
             <ul>
-                <li><a href="Home.php">Startpagina</a></li>
-                <li><a href="medewerker.php">Toevoegen</a></li>
-                <li><a href="flights.php">Vluchten</a></li>
+                <li><a href="medewerker.php">Medewerkers pagina</a></li>
+                <li><a href="uitlog.php">Uitloggen</a></li>
             </ul>
         </nav>
     </header>
